@@ -1,5 +1,6 @@
 package com.sportgame.gamelist.services;
 
+import com.sportgame.gamelist.Projections.GameMinProjection;
 import com.sportgame.gamelist.dto.GameDTO;
 import com.sportgame.gamelist.dto.GameMinDTO;
 import com.sportgame.gamelist.entities.Game;
@@ -34,6 +35,16 @@ private GameRepository gameRepository;
      return  result.stream().map(x -> new GameMinDTO(x)).toList();
 
     }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId){
+        List<GameMinProjection> result =  gameRepository.searchByList(listId);
+        return  result.stream().map(x -> new GameMinDTO(x)).toList();
+
+    }
+
+
+
 
 
 
