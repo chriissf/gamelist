@@ -1,11 +1,16 @@
-# Usa JDK 17 (mude se necessário)
-FROM eclipse-temurin:17-jdk
+# Etapa 1: Build com Maven + JDK 21
+FROM maven:3.9.6-eclipse-temurin:21 AS build
+WORKDIR /app
 
-# Define o argumento que identifica o JAR
-ARG JAR_FILE=target/*.jar
+COPY . .
+RUN ./mvnw clean package -DskipTests
 
-# Copia o JAR gerado para dentro da imagem
-COPY ${JAR_FILE} app.jar
+# Etapa 2: Runtime JDK 21
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
