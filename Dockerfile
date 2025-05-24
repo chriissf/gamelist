@@ -6,6 +6,9 @@ WORKDIR /app
 # Copia todos os arquivos do projeto para o container
 COPY . .
 
+# Ajusta permissão para o wrapper do Maven
+RUN chmod +x ./mvnw
+
 # Executa o build, pulando os testes
 RUN ./mvnw clean package -DskipTests
 
@@ -22,4 +25,3 @@ EXPOSE 8080
 
 # Comando para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
